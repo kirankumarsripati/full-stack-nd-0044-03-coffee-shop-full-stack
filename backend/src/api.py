@@ -20,14 +20,24 @@ CORS(app)
 
 ## ROUTES
 '''
-@TODO implement endpoint
+DONE implement endpoint
     GET /drinks
         it should be a public endpoint
         it should contain only the drink.short() data representation
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks', methods=['GET'])
+def get_drinks():
+    drinks_query = Drink.query.all()
 
+    if not drinks_query:
+        abort(404, description={'message': 'no drink found'})
+
+    return jsonify({
+        'success': True,
+        'drinks': [drink.short() for drink in drinks_query]
+    })
 
 '''
 @TODO implement endpoint
@@ -88,7 +98,7 @@ def unprocessable(error):
                     }), 422
 
 '''
-@TODO implement error handlers using the @app.errorhandler(error) decorator
+DONE implement error handlers using the @app.errorhandler(error) decorator
     each error handler should return (with approprate messages):
              jsonify({
                     "success": False, 
@@ -99,10 +109,35 @@ def unprocessable(error):
 '''
 
 '''
-@TODO implement error handler for 404
-    error handler should conform to general task above 
+DONE implement error handler for 404
+    error handler should conform to general task above
 '''
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({
+        'success': False,
+        'error': 404,
+        'message': get_error_message(error, 'resource not found')
+    }), 404
 
+def get_error_message(error, default_message):
+    '''
+    Returns if there is any error message provided in
+    error.description.message else default_message
+    This can be passed by calling
+    abort(404, description={'message': 'your message'})
+
+    Parameters:
+    error (werkzeug.exceptions.NotFound): error object
+    default_message (str): default message if custom message not available
+
+    Returns:
+    str: Custom error message or default error message
+    '''
+    try:
+        return error.description['message']
+    except TypeError:
+        return default_message
 
 '''
 @TODO implement error handler for AuthError
