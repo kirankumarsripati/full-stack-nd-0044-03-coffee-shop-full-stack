@@ -12,13 +12,13 @@ setup_db(app)
 CORS(app)
 
 '''
-@TODO uncomment the following line to initialize the datbase
+uncomment the following line to initialize the datbase
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 '''
 # db_drop_and_create_all()
 
-## ROUTES
+# ROUTES
 '''
 DONE implement endpoint
     GET /drinks
@@ -38,6 +38,7 @@ def get_drinks():
         'success': True,
         'drinks': [drink.short() for drink in drinks_query]
     })
+
 
 '''
 @TODO implement endpoint
@@ -85,23 +86,24 @@ def get_drinks():
 '''
 
 
-## Error Handling
+# Error Handling
 '''
 Example error handling for unprocessable entity
 '''
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
-                    "success": False, 
-                    "error": 422,
-                    "message": "unprocessable"
-                    }), 422
+        "success": False,
+        "error": 422,
+        "message": "unprocessable"
+    }), 422
+
 
 '''
 DONE implement error handlers using the @app.errorhandler(error) decorator
     each error handler should return (with approprate messages):
              jsonify({
-                    "success": False, 
+                    "success": False,
                     "error": 404,
                     "message": "resource not found"
                     }), 404
@@ -119,6 +121,7 @@ def not_found(error):
         'error': 404,
         'message': get_error_message(error, 'resource not found')
     }), 404
+
 
 def get_error_message(error, default_message):
     '''
@@ -139,7 +142,8 @@ def get_error_message(error, default_message):
     except TypeError:
         return default_message
 
+
 '''
 @TODO implement error handler for AuthError
-    error handler should conform to general task above 
+    error handler should conform to general task above
 '''
